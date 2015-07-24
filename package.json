@@ -1,0 +1,16 @@
+{
+  "name": "node-example",
+  "version": "0.0.1-alpha",
+  "description": "Il presente repository è utilizzato per la prova di programmazione da parte dei candidati per la posizione aperta di \"sviluppatore full stack\" presso Kopjra Srl.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.13.2",
+    "express": "^4.13.1"
+  }
+}
