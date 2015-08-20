@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emiliano for Kopjra: Node.js - Angular.js - Bootstrap</title>
+    <!-- Fogli di stile -->
+    <link href="css/bootstrap.css" rel="stylesheet" media="screen">
+    <style>
+        .ng-cloak,
+        .x-ng-cloak,
+        .ng-hide {
+            display: none !important;
+        }
+        .center-block{ float:none; }
+        #kopjralogo{ width: 200px; margin: 0 auto; }
+    </style>
+</head>
+
+<body ng-app="myApp" ng-controller="customersCtrl">
+
+    <img src="kopjra.png" id="kopjralogo" class="img-responsive" alt="Kopjra logo" />
+
+    <div class="container">
+        <div class="row ng-cloak" ng-show="logged.name">
+            <div class="col-md-12">
+
+                <div>
+                    <button type="submit" ng-click="logout()" class="btn btn-danger">Logout</button>
+                    <br>
+                    <h2>{{ logged.name }} {{ logged.surname }} ( Cash: {{ logged.cash }} Shares: {{ logged.shares }} )</h2>
+                     <br> <br>                  
+                </div>
+            </div>
+        </div>
+        <div class="row ng-cloak" ng-show="logged.name">
+
+
+            <div class="col-md-6">
+              <h2>Compra:</h2>
+                <form name="bidForm" novalidate>
+                    <div class="form-group">
+                        <label for="AskInput">Bid Price</label>
+                        <input type="number" ng-model="bid.price" name="bidprice" class="form-control" ng-required="true">
+                        <div ng-show="bidForm.bidprice.$invalid || bidForm.bidprice.$error.number">
+                            Inserisci il prezzo al quale vuoi comprare
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="AskInput">Bid Quantity</label>
+                        <input type="number" ng-model="bid.qty" name="bidqty" class="form-control" ng-required="true">
+                        <div ng-show="bidForm.bidqty.$invalid || bidForm.bidpty.$error.number">
+                            Inserisci la quantità che vuoi comprare
+                        </div>
+                    </div>
+                    <button type="submit" ng-click="submitBidForm(bid)" ng-disabled="bidForm.$invalid" class="btn btn-default">Compra</button>
+                </form>
+
+            </div>
+            <div class="col-md-6">
+              <h2>Vendi:</h2>
+                <form name="askForm" novalidate>
+                    <div class="form-group">
+                        <label for="AskInput">Ask Price</label>
+                        <input type="number" ng-model="ask.price" name="askprice" class="form-control" ng-required="true">
+                        <div ng-show="askForm.askprice.$invalid || askForm.askprice.$error.number">
+                            Inserisci il prezzo al quale vuoi vendere
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="AskInput">Ask Quantity</label>
+                        <input type="number" ng-model="ask.qty" name="askqty" class="form-control" ng-required="true">
+                        <div ng-show="askForm.askqty.$invalid || askForm.askpty.$error.number">
+                            Inserisci la quantità vuoi vendere
+                        </div>
+                    </div>
+                    <button type="submit" ng-click="submitAskForm(ask)" ng-disabled="askForm.$invalid" class="btn btn-default">Vendi</button>
+                </form>
+
+            </div>
+        </div>
+
+        <br> <br> 
+        <div class="row ng-cloak" ng-show="logged.name">
+            <div class="col-md-12">
+                <h2>Book</h2>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Qty</th>
+                            <th>Bid</th>
+                            <th>Ask</th>
+                            <th>Qty</th>
+                            <th>#</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>...</td>
+                            <td>...</td>
+                            <td>...</td>
+                            <td>...</td>
+                            <td>...</td>
+                            <td>...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+
+
+
+        <div ng-show="!logged.name" class="row">
+            <div class="col-md-5 center-block">
+                <form name="myForm" novalidate>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Username</label>
+                        <input type="text" ng-model="user.username" name="username" class="form-control" ng-required="true">
+                        <div ng-show="myForm.username.$invalid">
+                            Username obbligatorio
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputPassword1">Password</label>
+                        <input type="password" ng-model="user.password" name="password" class="form-control" ng-required="true">
+                        <div ng-show="myForm.password.$invalid">
+                            Password obbligatoria
+                        </div>
+                    </div>
+                    <button type="submit" ng-click="submitForm(user)" ng-disabled="myForm.$invalid" class="btn btn-default">Submit</button>
+                </form>
+
+                <div ng-show="logged.loginerror" class="ng-cloak">USERNAME E PASSWORD ERRATI! </div>
+
+
+            </div>
+
+        </div>
+
+
+
+
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+    <script>
+        var app = angular.module('myApp', []);
+        app.controller('customersCtrl', function($scope, $http) {
+
+            $http.get("http://localhost:8080/iflogged")
+                .success(function(response) {
+                    $scope.logged = response;
+                })
+
+            $scope.submitForm = function(user) {
+                $http.post("http://localhost:8080/login", {
+                        username: user.username,
+                        password: user.password
+                    })
+                    .success(function(response) {
+                        $scope.logged = response;
+                    });
+            };
+
+            $scope.submitBidForm = function(bid) {
+                $http.post("http://localhost:8080/bid", {
+                        bidprice: bid.price,
+                        bidqty: bid.qty
+                    })
+                    .success(function(response) {
+                        if (response.ok == 'yes') {                 
+                            $scope.bid.price = '';
+                            $scope.bid.qty = '';   
+                            alert('Ottimo acquisto');        
+                         }else{ 
+                            $scope.bid.price = '';
+                            $scope.bid.qty = '';   
+                            alert('Non hai abbastanza soldi'); }                
+                    });
+            };
+
+            $scope.submitAskForm = function(ask) {
+                $http.post("http://localhost:8080/ask", {
+                        askprice: ask.price,
+                        askqty: ask.qty
+                    })
+                    .success(function(response) {
+                        if (response.ok == 'yes') {                 
+                            $scope.ask.price = '';
+                            $scope.ask.qty = '';  
+                            alert('Ottima vendita');      
+                         }else{ 
+                            $scope.ask.price = '';
+                            $scope.ask.qty = '';   
+                            alert('Non hai abbastanza azioni'); }                        
+                     
+                    });
+            };
+                     
+            $scope.logout = function() {
+                $http.get("http://localhost:8080/logout")
+                    .success(function(response) {
+                        if (response.logged == 'out') {
+                            window.location.reload();
+                        }
+                    });
+            };
+
+        });
+    </script>
+</body>
+
+</html>
