@@ -54,7 +54,7 @@ app.post('/bid', function(req, res) {
     var bidprice = req.body.bidprice;
     var bidqty = req.body.bidqty;
 
-    if ((bidprice * bidqty <= req.session.cash) && (/^[0-9]*[.][0-9]+$/.test(bidprice)) && (/^\d+$/.test(bidqty))) { // check the wallet and do the validation
+    if ((bidprice * bidqty <= req.session.cash) && (/(^[0-9]+[.][0-9]+)$|^[\d+]$/.test(bidprice)) && (/^\d+$/.test(bidqty))) { // check the wallet and do the validation
         console.log(/^\d+$/.test(bidqty));
         var file = __dirname + '/mocks/bid.json';
         var bids = JSON.parse(fs.readFileSync(file, 'utf8'));
@@ -88,7 +88,7 @@ app.post('/ask', function(req, res) {
     var askqty = req.body.askqty;
     console.log(req.session.share);
 
-    if ((askprice * askqty <= req.session.shares) && (/^[0-9]*[.][0-9]+$/.test(askprice)) && (/^\d+$/.test(askqty))) { // check the wallet and do the validation    
+    if ((askprice * askqty <= req.session.shares) && (/(^[0-9]+[.][0-9]+)$|^[\d+]$/.test(askprice)) && (/^\d+$/.test(askqty))) { // check the wallet and do the validation    
         var file = __dirname + '/mocks/ask.json';
         var asks = JSON.parse(fs.readFileSync(file, 'utf8'));
         asks.push({
