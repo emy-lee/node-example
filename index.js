@@ -70,7 +70,7 @@ app.post('/bid', function(req, res) {
                 console.log('qualcuno vende al mio prezzo di acquisto');
                 esisteask = 1;
 
-                if (asks[ii].qty >= bidqty) {
+                if (asks[ii].qty > bidqty) {
 
                     asks[ii].qty = asks[ii].qty - bidqty;
                     req.session.cash = req.session.cash - (bidprice * bidqty);
@@ -96,7 +96,7 @@ app.post('/bid', function(req, res) {
                     break; // esce dal ciclo perche ho comprato tutto quello che volevo comprare
 
 
-                } else if (asks[ii].qty < bidqty) {
+                } else if (asks[ii].qty <= bidqty) {
 
                     req.session.cash = req.session.cash - (bidprice * asks[ii].qty);
                     req.session.shares = req.session.shares + asks[ii].qty;
@@ -146,7 +146,9 @@ app.post('/bid', function(req, res) {
 
 
         res.json({
-            ok: 'yes'
+            ok: 'yes',            
+            cash: req.session.cash,
+            shares: req.session.shares
         });
     } else { // non hai abbastanza denaro o validazione non andata a buon fine
 
@@ -178,7 +180,7 @@ app.post('/ask', function(req, res) {
             if (bids[ii].price == askprice) {
                 console.log('qualcuno vuole comprare al mio prezzo di vendita');
                 esistebid = 1;
-                if (bids[ii].qty >= askqty) {
+                if (bids[ii].qty > askqty) {
 
                     bids[ii].qty = bids[ii].qty - askqty;
                     req.session.cash = req.session.cash + (askprice * askqty);
@@ -193,7 +195,8 @@ app.post('/ask', function(req, res) {
                         if (users[iuser].id == req.session.userid) { // VENDITORE    
                             users[iuser].wallet.cash = users[iuser].wallet.cash + (askprice * askqty);
                             users[iuser].wallet.shares = users[iuser].wallet.shares - askqty;
-                        } else if (users[iuser].id == bids[ii].userid) { // ACQUIRENTE     
+                        } 
+                        if (users[iuser].id == bids[ii].userid) { // ACQUIRENTE     
                             users[iuser].wallet.shares = users[iuser].wallet.shares + askqty;
                             users[iuser].wallet.cash = users[iuser].wallet.cash - (askprice * askqty);
                         }
@@ -203,7 +206,7 @@ app.post('/ask', function(req, res) {
                     break; // esce dal ciclo perche ho venduto tutto quello che volevo vendere
 
 
-                } else if (bids[ii].qty < askqty) {
+                } else if (bids[ii].qty <= askqty) {
                      
                     req.session.cash = req.session.cash + (askprice * bids[ii].qty);
                     req.session.shares = req.session.shares - bids[ii].qty;
@@ -218,7 +221,8 @@ app.post('/ask', function(req, res) {
                         if (users[iuser].id == req.session.userid) { // VENDITORE              
                             users[iuser].wallet.cash = users[iuser].wallet.cash + (askprice * bids[ii].qty);
                             users[iuser].wallet.shares = users[iuser].wallet.shares - bids[ii].qty;
-                        } else if (users[iuser].id == bids[ii].userid) { // ACQUIRENTE      
+                        }
+                        if (users[iuser].id == bids[ii].userid) { // ACQUIRENTE      
                             users[iuser].wallet.shares = users[iuser].wallet.shares + bids[ii].qty;
                             users[iuser].wallet.cash = users[iuser].wallet.cash - (askprice * bids[ii].qty);
                         }
@@ -251,7 +255,9 @@ app.post('/ask', function(req, res) {
 
 
         res.json({
-            ok: 'yes'
+            ok: 'yes',         
+            cash: req.session.cash,
+            shares: req.session.shares
         });
     } else { // non hai abbastanza azioni o validazione non andata a buon fine
 
