@@ -54,20 +54,96 @@ app.post('/bid', function(req, res) {
     var bidprice = req.body.bidprice;
     var bidqty = req.body.bidqty;
 
+
     if ((bidprice * bidqty <= req.session.cash) && (/(^[0-9]+[.][0-9]+)$|^[\d+]$/.test(bidprice)) && (/^\d+$/.test(bidqty))) { // check the wallet and do the validation
-        console.log(/^\d+$/.test(bidqty));
-        var file = __dirname + '/mocks/bid.json';
-        var bids = JSON.parse(fs.readFileSync(file, 'utf8'));
-        bids.push({
-            "id": idbid++,
-            "userid": req.session.userid,
-            "qty": bidqty,
-            "price": bidprice
-        });
 
-        fs.writeFileSync(file, JSON.stringify(bids, null, 4));
 
-        // qui bisognerebbe aggiornare il wallet dell utente
+        // CONTROLLA SE QUALCUNO VENDE AL MIO PREZZO DI ACQUISTO:
+        var fileask = __dirname + '/mocks/ask.json';
+        var esisteask = 0;
+        var asks = JSON.parse(fs.readFileSync(fileask, 'utf8'));
+        var fileuser = __dirname + '/mocks/users.json';
+        var users = JSON.parse(fs.readFileSync(fileuser, 'utf8'));
+        var ii = 0;
+        while ((asks[ii]) && (bidqty > 0)) {
+            if (asks[ii].price == bidprice) {
+                console.log('qualcuno vende al mio prezzo di acquisto');
+                esisteask = 1;
+
+                if (asks[ii].qty >= bidqty) {
+
+                    asks[ii].qty = asks[ii].qty - bidqty;
+                    req.session.cash = req.session.cash - (bidprice * bidqty);
+                    req.session.shares = req.session.shares + bidqty;
+
+
+                    // AGGIORNO WALLET:
+                    console.log('aggiorno wallet');
+
+                    var iuser = 0;
+                    while (users[iuser]) {
+
+                        if (users[iuser].id == req.session.userid) { // ACQUIRENTE    
+                            users[iuser].wallet.cash = users[iuser].wallet.cash - (bidprice * bidqty);
+                            users[iuser].wallet.shares = users[iuser].wallet.shares + bidqty;
+                        } else if (users[iuser].id == asks[ii].userid) { // VENDITORE     
+                            users[iuser].wallet.shares = users[iuser].wallet.shares - bidqty;
+                            users[iuser].wallet.cash = users[iuser].wallet.cash + (bidprice * bidqty);
+                        }
+                        iuser++;
+                    }
+                    bidqty = 0;
+                    break; // esce dal ciclo perche ho comprato tutto quello che volevo comprare
+
+
+                } else if (asks[ii].qty < bidqty) {
+
+                    req.session.cash = req.session.cash - (bidprice * asks[ii].qty);
+                    req.session.shares = req.session.shares + asks[ii].qty;
+                    bidqty = bidqty - asks[ii].qty;
+
+                    // AGGIORNO WALLET:
+                    console.log('aggiorno wallet');
+                    var iuser = 0;
+
+                    while (users[iuser]) {
+
+                        if (users[iuser].id == req.session.userid) { // ACQUIRENTE               
+                            users[iuser].wallet.cash = users[iuser].wallet.cash - (bidprice * asks[ii].qty);
+                            users[iuser].wallet.shares = users[iuser].wallet.shares + asks[ii].qty;
+                        } else if (users[iuser].id == asks[ii].userid) { // VENDITORE       
+                            users[iuser].wallet.shares = users[iuser].wallet.shares - asks[ii].qty;
+                            users[iuser].wallet.cash = users[iuser].wallet.cash + (bidprice * asks[ii].qty);
+                        }
+                        iuser++;
+                    }
+                    asks.splice(ii, 1);
+
+                }
+
+
+
+            }
+            ii++;
+        }
+        fs.writeFileSync(fileuser, JSON.stringify(users, null, 4));
+        fs.writeFileSync(fileask, JSON.stringify(asks, null, 4));
+
+
+        // OFFERTA DI ACQUISTO REGISTRATA SUL BOOK PERCHE NESSUNO VENDE AL MIO PREZZO DI ACQUISTO:
+        if ((!esisteask) || ((esisteask) && (bidqty > 0))) {
+            var filebid = __dirname + '/mocks/bid.json';
+            var bids = JSON.parse(fs.readFileSync(filebid, 'utf8'));
+            bids.push({
+                "id": idbid++,
+                "userid": req.session.userid,
+                "qty": bidqty,
+                "price": bidprice
+            });
+
+            fs.writeFileSync(filebid, JSON.stringify(bids, null, 4));
+        }
+
 
         res.json({
             ok: 'yes'
@@ -86,21 +162,93 @@ app.post('/ask', function(req, res) {
 
     var askprice = req.body.askprice;
     var askqty = req.body.askqty;
-    console.log(req.session.share);
-
+    
     if ((askprice * askqty <= req.session.shares) && (/(^[0-9]+[.][0-9]+)$|^[\d+]$/.test(askprice)) && (/^\d+$/.test(askqty))) { // check the wallet and do the validation    
-        var file = __dirname + '/mocks/ask.json';
-        var asks = JSON.parse(fs.readFileSync(file, 'utf8'));
-        asks.push({
-            "id": idask++,
-            "userid": req.session.userid,
-            "qty": askqty,
-            "price": askprice
-        });
 
-        fs.writeFileSync(file, JSON.stringify(asks, null, 4));
 
-        // qui bisognerebbe aggiornare il wallet dell utente
+
+        // CONTROLLA SE QUALCUNO VUOLE COMPRARE AL MIO PREZZO DI VENDITA:
+        var filebid = __dirname + '/mocks/bid.json';
+        var esistebid = 0;
+        var bids = JSON.parse(fs.readFileSync(filebid, 'utf8'));
+        var fileuser = __dirname + '/mocks/users.json';
+        var users = JSON.parse(fs.readFileSync(fileuser, 'utf8'));
+        var ii = 0;
+        while ((bids[ii]) && (askqty > 0)) {
+            if (bids[ii].price == askprice) {
+                console.log('qualcuno vuole comprare al mio prezzo di vendita');
+                esistebid = 1;
+                if (bids[ii].qty >= askqty) {
+
+                    bids[ii].qty = bids[ii].qty - askqty;
+                    req.session.cash = req.session.cash + (askprice * askqty);
+                    req.session.shares = req.session.shares - askqty;
+
+
+                    // AGGIORNO WALLET:
+                    console.log('aggiorno wallet');
+
+                    var iuser = 0;
+                    while (users[iuser]) {
+                        if (users[iuser].id == req.session.userid) { // VENDITORE    
+                            users[iuser].wallet.cash = users[iuser].wallet.cash + (askprice * askqty);
+                            users[iuser].wallet.shares = users[iuser].wallet.shares - askqty;
+                        } else if (users[iuser].id == bids[ii].userid) { // ACQUIRENTE     
+                            users[iuser].wallet.shares = users[iuser].wallet.shares + askqty;
+                            users[iuser].wallet.cash = users[iuser].wallet.cash - (askprice * askqty);
+                        }
+                        iuser++;
+                    }
+                    askqty = 0;
+                    break; // esce dal ciclo perche ho venduto tutto quello che volevo vendere
+
+
+                } else if (bids[ii].qty < askqty) {
+                     
+                    req.session.cash = req.session.cash + (askprice * bids[ii].qty);
+                    req.session.shares = req.session.shares - bids[ii].qty;
+                    askqty = askqty - bids[ii].qty;
+
+                    // AGGIORNO WALLET:
+                    console.log('aggiorno wallet');
+                    var iuser = 0;
+
+                    while (users[iuser]) {
+                        console.log('test 4');
+                        if (users[iuser].id == req.session.userid) { // VENDITORE              
+                            users[iuser].wallet.cash = users[iuser].wallet.cash + (askprice * bids[ii].qty);
+                            users[iuser].wallet.shares = users[iuser].wallet.shares - bids[ii].qty;
+                        } else if (users[iuser].id == bids[ii].userid) { // ACQUIRENTE      
+                            users[iuser].wallet.shares = users[iuser].wallet.shares + bids[ii].qty;
+                            users[iuser].wallet.cash = users[iuser].wallet.cash - (askprice * bids[ii].qty);
+                        }
+                        iuser++;
+                    }
+                    bids.splice(ii, 1);
+
+                }
+
+
+
+            }
+            ii++;
+        }
+        fs.writeFileSync(fileuser, JSON.stringify(users, null, 4));
+        fs.writeFileSync(filebid, JSON.stringify(bids, null, 4));
+
+        // OFFERTA DI VENDITA REGISTRATA SUL BOOK PERCHE NESSUNO VUOLE COMPRARE AL MIO PREZZO DI VENDITA:
+        if ((!esistebid) || ((esistebid) && (askqty > 0))) {
+            var fileask = __dirname + '/mocks/ask.json';
+            var asks = JSON.parse(fs.readFileSync(fileask, 'utf8'));
+            asks.push({
+                "id": idask++,
+                "userid": req.session.userid,
+                "qty": askqty,
+                "price": askprice
+            });
+            fs.writeFileSync(fileask, JSON.stringify(asks, null, 4));
+        }
+
 
         res.json({
             ok: 'yes'
@@ -168,7 +316,7 @@ app.post('/login', function(req, res) {
 
         });
 
-    } else {      // validaziono non andata a buon fine:
+    } else { // validaziono non andata a buon fine:
 
         res.json({
             loginerror: 'error'
