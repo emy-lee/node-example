@@ -1,41 +1,41 @@
 [
-  {
-    "id": "2500af0",
-    "username": "mariorossi",
-    "salt": "D8ZHeYzrjcEkyvucKLUS5BDx",
-    "password": "11ccc880434766a7ad0bb58c04134a3ebba6f98a",
-    "name": "Mario",
-    "surname": "Rossi",
-    "email": "mariorossi@example.com",
-    "wallet": {
-      "cash": 50.00,
-      "shares": 100
+    {
+        "id": "2500af0",
+        "username": "mariorossi",
+        "salt": "D8ZHeYzrjcEkyvucKLUS5BDx",
+        "password": "11ccc880434766a7ad0bb58c04134a3ebba6f98a",
+        "name": "Mario",
+        "surname": "Rossi",
+        "email": "mariorossi@example.com",
+        "wallet": {
+            "cash": 50,
+            "shares": 100
+        }
+    },
+    {
+        "id": "2500af1",
+        "username": "antoniomarchesini",
+        "salt": "BgWyPUYEfsnjCHHAw2BxXFbY",
+        "password": "1c263384bffecf4c807100c600f6a33ef7eccd6e",
+        "name": "Antonio",
+        "surname": "Marchesini",
+        "email": "mariorossi@example.com",
+        "wallet": {
+            "cash": 100,
+            "shares": 1000
+        }
+    },
+    {
+        "id": "2500af2",
+        "username": "giorgiaventuri",
+        "salt": "dyAvbezYcXuKvNxe8B7MX2Fp",
+        "password": "433c3b8670486ad1cdc44a85a2b4e3e941718d14",
+        "name": "Giorgia",
+        "surname": "Venturi",
+        "email": "giorgiaventuri@example.com",
+        "wallet": {
+            "cash": 5000,
+            "shares": 0
+        }
     }
-  },
-  {
-    "id": "2500af1",
-    "username": "antoniomarchesini",
-    "salt": "BgWyPUYEfsnjCHHAw2BxXFbY",
-    "password": "1c263384bffecf4c807100c600f6a33ef7eccd6e",
-    "name": "Antonio",
-    "surname": "Marchesini",
-    "email": "mariorossi@example.com",
-    "wallet": {
-      "cash": 0.00,
-      "shares": 1000
-    }
-  },
-  {
-    "id": "2500af2",
-    "username": "giorgiaventuri",
-    "salt": "dyAvbezYcXuKvNxe8B7MX2Fp",
-    "password": "433c3b8670486ad1cdc44a85a2b4e3e941718d14",
-    "name": "Giorgia",
-    "surname": "Venturi",
-    "email": "giorgiaventuri@example.com",
-    "wallet": {
-      "cash": 5000.00,
-      "shares": 0
-    }
-  }
 ]
