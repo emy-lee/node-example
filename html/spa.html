@@ -175,6 +175,8 @@
                         if (response.ok == 'yes') {                 
                             $scope.bid.price = '';
                             $scope.bid.qty = '';   
+                            $scope.logged.cash = response.cash;
+                            $scope.logged.shares = response.shares;                            
                             alert('Ottimo acquisto');        
                          }else{ 
                             $scope.bid.price = '';
@@ -192,6 +194,8 @@
                         if (response.ok == 'yes') {                 
                             $scope.ask.price = '';
                             $scope.ask.qty = '';  
+                            $scope.logged.cash = response.cash;
+                            $scope.logged.shares = response.shares;                               
                             alert('Ottima vendita');      
                          }else{ 
                             $scope.ask.price = '';
