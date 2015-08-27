@@ -86,7 +86,8 @@ app.post('/bid', function(req, res) {
                         if (users[iuser].id == req.session.userid) { // ACQUIRENTE    
                             users[iuser].wallet.cash = users[iuser].wallet.cash - (bidprice * bidqty);
                             users[iuser].wallet.shares = users[iuser].wallet.shares + bidqty;
-                        } else if (users[iuser].id == asks[ii].userid) { // VENDITORE     
+                        }
+                        if (users[iuser].id == asks[ii].userid) { // VENDITORE     
                             users[iuser].wallet.shares = users[iuser].wallet.shares - bidqty;
                             users[iuser].wallet.cash = users[iuser].wallet.cash + (bidprice * bidqty);
                         }
@@ -111,7 +112,8 @@ app.post('/bid', function(req, res) {
                         if (users[iuser].id == req.session.userid) { // ACQUIRENTE               
                             users[iuser].wallet.cash = users[iuser].wallet.cash - (bidprice * asks[ii].qty);
                             users[iuser].wallet.shares = users[iuser].wallet.shares + asks[ii].qty;
-                        } else if (users[iuser].id == asks[ii].userid) { // VENDITORE       
+                        }
+                        if (users[iuser].id == asks[ii].userid) { // VENDITORE       
                             users[iuser].wallet.shares = users[iuser].wallet.shares - asks[ii].qty;
                             users[iuser].wallet.cash = users[iuser].wallet.cash + (bidprice * asks[ii].qty);
                         }
