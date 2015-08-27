@@ -164,8 +164,9 @@ app.post('/ask', function(req, res) {
 
     var askprice = req.body.askprice;
     var askqty = req.body.askqty;
-    
-    if ((askprice * askqty <= req.session.shares) && (/(^[0-9]+[.][0-9]+)$|^[\d+]$/.test(askprice)) && (/^\d+$/.test(askqty))) { // check the wallet and do the validation    
+    console.log(askprice * askqty);
+    console.log(req.session.shares);    
+    if ((askqty <= req.session.shares) && (/(^[0-9]+[.][0-9]+)$|^[\d+]$/.test(askprice)) && (/^\d+$/.test(askqty))) { // check the wallet and do the validation    
 
 
 
@@ -217,7 +218,6 @@ app.post('/ask', function(req, res) {
                     var iuser = 0;
 
                     while (users[iuser]) {
-                        console.log('test 4');
                         if (users[iuser].id == req.session.userid) { // VENDITORE              
                             users[iuser].wallet.cash = users[iuser].wallet.cash + (askprice * bids[ii].qty);
                             users[iuser].wallet.shares = users[iuser].wallet.shares - bids[ii].qty;
