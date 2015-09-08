@@ -1,3 +1,61 @@
+# ENGLISH
+
+This repository is used for the test program by candidates for the open position of "developer full stack" at Kopjra Srl.
+
+The total estimated time to complete the test is about 4 hours.
+
+# Common guidelines and delivery methods
+
+It 'been given a dummy application in Node.js on Express 4, no front-end, which responds only to the `GET / hello`. Please extend the application, following the guidelines indicated in the year specific. The solution will also perform input validation (both front-end and back-end) and contain the test classes. There is no set deadline for delivery.
+
+1. Perform a fork of this repository;
+1. Perform the exercise by following the description and deliveries indicated;
+1. If you have any questions, please open un'issue the repository itself;
+1. At the end of the changes make a Pull Request.
+
+# General description
+
+The purpose of the application is to create a simple application that allows the sale of a single financial instrument.
+
+All users can purchase and sale transactions (subject to verification of their cash for purchases and possession of the instrument for its sales). I do not allow short selling operations.
+
+Cornerstone of the application is the book (book) containing proposals for the purchase and sale with its price and volume. Please visit the following page of the Italian Stock Exchange for more information: http://www.borsaitaliana.it/notizie/sotto-la-lente/il-book.htm
+
+## Simplifying assumptions
+
+1. It will be used a single currency notional divided into cents;
+1. As already indicated, there is a single financial instrument to trade on the platform;
+1. There is no concept of a user with administrator privileges: all users are "unprivileged", each of which has access only to its own resources;
+1. There is no registration page but only to login;
+1. The inclusion of new users or editing / removal of existing users (including the loading of the initial portfolio for each user) will eventually hand by intervening directly on the data storage.
+
+# Specific Directives to the front end
+
+The front-end will be a Single Page Application developed preferably React to use the RESTful API provided by the back-end. We recommend the use of Bootstrap to the templating base.
+
+The UI will simply allow the use of the functionality described above. The evaluation of the UX is not a specific objective of the test.
+
+# Specific Directives to the back-end
+
+The backend will expose RESTful API and will be developed using Express 4. Interactions on the underlying database will be simulated using mock objects provided with exercise.
+
+All calls API RESTful backend must accept a content type "application / json" and * must * respond with content of the same type.
+
+Possibly static content can be served directly from Express, but it is absolutely forbidden pre-rendering of HTML by the back-end.
+
+Choose the model preferred authentication.
+
+
+
+
+
+
+
+
+----------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------
+# ITALIAN
+
 Il presente repository è utilizzato per la prova di programmazione da parte dei candidati per la posizione aperta di "sviluppatore full stack" presso Kopjra Srl.
 
 Il tempo complessivo stimato per completare la prova è di circa 4 ore.
