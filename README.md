@@ -1,18 +1,5 @@
 # ENGLISH
 
-This repository is used for the test program by candidates for the open position of "developer full stack" at Kopjra Srl.
-
-The total estimated time to complete the test is about 4 hours.
-
-# Common guidelines and delivery methods
-
-It 'been given a dummy application in Node.js on Express 4, no front-end, which responds only to the `GET / hello`. Please extend the application, following the guidelines indicated in the year specific. The solution will also perform input validation (both front-end and back-end) and contain the test classes. There is no set deadline for delivery.
-
-1. Perform a fork of this repository;
-1. Perform the exercise by following the description and deliveries indicated;
-1. If you have any questions, please open un'issue the repository itself;
-1. At the end of the changes make a Pull Request.
-
 # General description
 
 The purpose of the application is to create a simple application that allows the sale of a single financial instrument.
@@ -55,19 +42,6 @@ Choose the model preferred authentication.
 ----------------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------------
 # ITALIAN
-
-Il presente repository è utilizzato per la prova di programmazione da parte dei candidati per la posizione aperta di "sviluppatore full stack" presso Kopjra Srl.
-
-Il tempo complessivo stimato per completare la prova è di circa 4 ore.
-
-# Direttive comuni e modalità di consegna
-
-E' stata fornita una applicazione dummy in Node.js su Express 4, senza front-end, che risponde esclusivamente alla chiamata `GET /hello`. Si prega di estendere l'applicazione, seguendo le direttive indicate nell'esercizio specifico. La soluzione dovrà effettuare anche la validazione dell'input (sia lato front-end che back-end) e contenere le classi di test. Non è prevista una deadline per la consegna.
-
-1. Effettuare un fork del presente repository;
-1. Eseguire l'esercizio seguendo la descrizione e le consegne indicate;
-1. Se si hanno delle domande, si prega di aprire un'issue sul repository stesso;
-1. Al termine delle modifiche effettuare una Pull Request.
 
 # Descrizione generale
 
